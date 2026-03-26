@@ -1,0 +1,37 @@
+@using frontend.Models
+
+<MudPaper Class="kanban-card"
+          Elevation="0"
+          data-testid="@($"card-{Card.Id}")"
+          data-active="@(IsActive ? "true" : "false")"
+          @onclick="() => OnActivate.InvokeAsync(Card.Id)">
+    <div style="padding: 12px 12px 10px 12px;">
+        <div style="display:flex; align-items:flex-start; gap: 8px;">
+            <div style="flex: 1; min-width: 0;">
+                <MudText Typo="Typo.subtitle2" Class="kanban-card-title" Style="line-height: 1.2;">
+                    @Card.Title
+                </MudText>
+                @if (!string.IsNullOrWhiteSpace(Card.Details))
+                {
+                    <MudText Typo="Typo.body2" Class="kanban-muted" Style="margin-top: 6px; white-space: pre-wrap;">
+                        @Card.Details
+                    </MudText>
+                }
+            </div>
+
+            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                           Color="Color.Default"
+                           Size="Size.Small"
+                           aria-label="Delete card"
+                           OnClick="() => OnDelete.InvokeAsync(Card.Id)" />
+        </div>
+    </div>
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public CardModel Card { get; set; } = default!;
+    [Parameter, EditorRequired] public EventCallback<Guid> OnDelete { get; set; }
+    [Parameter] public bool IsActive { get; set; }
+    [Parameter] public EventCallback<Guid> OnActivate { get; set; }
+}
+

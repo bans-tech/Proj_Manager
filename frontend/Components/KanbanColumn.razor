@@ -1,0 +1,113 @@
+@using frontend.Models
+@using frontend.Services
+@inject BoardStore Store
+@inject IDialogService DialogService
+
+<MudPaper Class="kanban-column" Elevation="0" data-testid="@($"column-{Column.Id}")">
+    <div class="kanban-column-header">
+        @if (_isRenaming)
+        {
+            <MudTextField @bind-Value="_nameDraft"
+                          dense="true"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          Immediate="true"
+                          AutoFocus="true"
+                          OnBlur="CommitRename"
+                          OnKeyDown="OnRenameKeyDown"
+                          Style="flex: 1;"
+                          aria-label="Column name" />
+
+            <MudIconButton Icon="@Icons.Material.Filled.Check"
+                           Color="Color.Primary"
+                           Size="Size.Small"
+                           aria-label="Save column name"
+                           OnClick="CommitRename" />
+        }
+        else
+        {
+            <MudButton Variant="Variant.Text"
+                       Color="Color.Primary"
+                       Class="kanban-column-titleButton"
+                       OnClick="BeginRename">
+                @Column.Name
+            </MudButton>
+
+            <MudSpacer />
+
+            <MudIconButton Icon="@Icons.Material.Filled.Add"
+                           Color="Color.Secondary"
+                           Size="Size.Small"
+                           aria-label="Add card"
+                           OnClick="OpenAddCardDialog" />
+        }
+    </div>
+
+    <div class="kanban-cards">
+        @if (CardCount == 0)
+        {
+            <MudText Typo="Typo.body2" Class="kanban-muted">Drop here, or add a card.</MudText>
+        }
+        @ChildContent
+    </div>
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public ColumnModel Column { get; set; } = default!;
+    [Parameter, EditorRequired] public int CardCount { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _isRenaming;
+    private string _nameDraft = string.Empty;
+
+    private void BeginRename()
+    {
+        _nameDraft = Column.Name;
+        _isRenaming = true;
+    }
+
+    private void CommitRename()
+    {
+        if (!_isRenaming)
+            return;
+
+        _isRenaming = false;
+        Store.RenameColumn(Column.Id, _nameDraft);
+    }
+
+    private void CancelRename()
+    {
+        _isRenaming = false;
+        _nameDraft = Column.Name;
+    }
+
+    private void OnRenameKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key is "Enter")
+            CommitRename();
+        else if (e.Key is "Escape")
+            CancelRename();
+    }
+
+    private async Task OpenAddCardDialog()
+    {
+        var parameters = new DialogParameters
+        {
+            ["ColumnName"] = Column.Name,
+        };
+
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<AddCardDialog>(string.Empty, parameters, options);
+        var result = await dialog.Result;
+        if (result is null || result.Canceled)
+            return;
+    }
+
+}
+

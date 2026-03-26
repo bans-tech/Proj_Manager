@@ -1,0 +1,12 @@
+services:
+  pm-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pm-app
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development

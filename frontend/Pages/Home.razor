@@ -1,0 +1,79 @@
+@page "/"
+@using frontend.Services
+@using frontend.Models
+@inject BoardStore Store
+@implements IDisposable
+
+<PageTitle>Board</PageTitle>
+
+<div class="board-wrap">
+    <MudDropContainer T="CardModel"
+                      Items="@Snapshot.Cards"
+                      ItemsSelector="@((card, zoneId) => card.ColumnId.ToString() == zoneId)"
+                      ItemDropped="OnCardDropped"
+                      Class="board-columns"
+                      @key="_renderKey">
+        <ChildContent>
+            @foreach (var column in Snapshot.Columns)
+            {
+                var count = Snapshot.Cards.Count(c => c.ColumnId == column.Id);
+
+                <KanbanColumn Column="column" CardCount="count">
+                    <MudDropZone T="CardModel"
+                                 Identifier="@column.Id.ToString()"
+                                 Class="kanban-dropzone"
+                                 data-testid="@($"dropzone-{column.Id}")" />
+                </KanbanColumn>
+            }
+        </ChildContent>
+
+        <ItemRenderer>
+            <KanbanCard Card="@context"
+                        OnDelete="DeleteCard"
+                        IsActive="@(context.Id == _activeCardId)"
+                        OnActivate="SetActiveCard" />
+        </ItemRenderer>
+    </MudDropContainer>
+</div>
+
+@code {
+    private BoardSnapshot Snapshot { get; set; } = new(Array.Empty<ColumnModel>(), Array.Empty<CardModel>());
+    private int _renderKey;
+    private Guid _activeCardId;
+
+    protected override void OnInitialized()
+    {
+        Snapshot = Store.GetSnapshot();
+        Store.Changed += OnStoreChanged;
+    }
+
+    private void OnStoreChanged()
+    {
+        Snapshot = Store.GetSnapshot();
+        _renderKey++;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Store.Changed -= OnStoreChanged;
+    }
+
+    private void DeleteCard(Guid cardId) => Store.DeleteCard(cardId);
+
+    private void SetActiveCard(Guid cardId)
+    {
+        _activeCardId = _activeCardId == cardId ? Guid.Empty : cardId;
+    }
+
+    private void OnCardDropped(MudItemDropInfo<CardModel> dropInfo)
+    {
+        if (dropInfo.Item is null)
+            return;
+
+        if (!Guid.TryParse(dropInfo.DropzoneIdentifier, out var targetColumnId))
+            return;
+
+        Store.MoveCard(dropInfo.Item.Id, targetColumnId, dropInfo.IndexInZone);
+    }
+}

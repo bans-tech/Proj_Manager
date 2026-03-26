@@ -1,53 +1,64 @@
-# The Project Management MVP web app
+# The Project Management MVP Web App (.NET Stack)
 
 ## Business Requirements
 
-This project is building a Project Management App. Key features:
-- A user can sign in
-- When signed in, the user sees a Kanban board representing their project
-- The Kanban board has fixed columns that can be renamed
-- The cards on the Kanban board can be moved with drag and drop, and edited
-- There is an AI chat feature in a sidebar; the AI is able to create / edit / move one or more cards
+This project is building a Project Management app. Key features:
+- A user can sign in.
+- When signed in, the user sees a Kanban board representing their project.
+- The Kanban board has fixed columns that can be renamed.
+- The cards on the Kanban board can be moved with drag and drop, and edited.
+- There is an AI chat feature in a sidebar; the AI can create, edit, or move one or more cards.
 
-## Limitations
+## MVP Limitations
 
-For the MVP, there will only be a user sign in (hardcoded to 'user' and 'password') but the database will support multiple users for future.
+- Authentication is a single hardcoded login (`user` / `password`) for MVP UX only, while the database schema supports multiple users.
+- Each signed-in user has exactly one Kanban board in MVP.
+- The app runs locally in Docker for MVP.
 
-For the MVP, there will only be 1 Kanban board per signed in user.
+## Technical Decisions (.NET)
 
-For the MVP, this will run locally (in a docker container)
-
-## Technical Decisions
-
-- NextJS frontend
-- Python FastAPI backend, including serving the static NextJS site at /
-- Everything packaged into a Docker container
-- Use "uv" as the package manager for python in the Docker container
-- Use OpenRouter for the AI calls. An OPENROUTER_API_KEY is in .env in the project root
-- Use `openai/gpt-oss-120b` as the model
-- Use SQLLite local database for the database, creating a new db if it doesn't exist
-- Start and Stop server scripts for Mac, PC, Linux in scripts/
+- .NET 9 stack.
+- ASP.NET Core hosts everything:
+  - API endpoints for auth, Kanban, and AI chat.
+  - Static file hosting for the frontend at `/`.
+- Frontend:
+  - Blazor frontend in `frontend/`.
+  - Blazor app is served by ASP.NET Core at `/`.
+  - Frontend calls backend JSON APIs.
+- Persistence:
+  - SQLite local database file.
+  - Normalized relational schema (`Users`, `Boards`, `Columns`, `Cards`).
+  - Auto-migrate only in local/dev.
+- AI:
+  - OpenRouter for model calls.
+  - `OPENROUTER_API_KEY` loaded from `.env`.
+  - Model: `openai/gpt-oss-120b`.
+  - Strict server-side schema validation for AI responses; reject unknown fields.
+- Packaging/runtime:
+  - Single Docker image/container for local MVP runs.
+- Scripts:
+  - Start/stop scripts for Windows, macOS, Linux in `scripts/`.
 
 ## Starting Point
 
-A working MVP of the frontend has been built and is already in frontend. This is not yet designed for the Docker setup. It's a pure frontend-only demo.
+A working frontend-only Kanban demo already exists in `frontend/`. It must be integrated into the .NET-hosted app and wired to backend APIs.
 
 ## Color Scheme
 
-- Accent Yellow: `#ecad0a` - accent lines, highlights
-- Blue Primary: `#209dd7` - links, key sections
-- Purple Secondary: `#753991` - submit buttons, important actions
-- Dark Navy: `#032147` - main headings
-- Gray Text: `#888888` - supporting text, labels
+- Accent Yellow: `#ecad0a` (accent lines, highlights)
+- Blue Primary: `#209dd7` (links, key sections)
+- Purple Secondary: `#753991` (submit buttons, important actions)
+- Dark Navy: `#032147` (main headings)
+- Gray Text: `#888888` (supporting text, labels)
 
-## Coding standards
+## Coding Standards
 
-1. Use latest versions of libraries and idiomatic approaches as of today
-2. Keep it simple - NEVER over-engineer, ALWAYS simplify, NO unnecessary defensive programming. No extra features - focus on simplicity.
-3. Be concise. Keep README minimal. IMPORTANT: no emojis ever
-4. When hitting issues, always identify root cause before trying a fix. Do not guess. Prove with evidence, then fix the root cause.
+1. Use current stable .NET and library versions with idiomatic patterns.
+2. Keep it simple: no over-engineering, no unnecessary defensive programming, no extra features.
+3. Keep docs concise; README stays minimal; no emojis.
+4. When issues occur, identify and prove root cause before fixing.
 
-## Working documentation
+## Working Documentation
 
-All documents for planning and executing this project will be in the docs/ directory.
-Please review the docs/PLAN.md document before proceeding.
+- Planning and execution docs live under `docs/`.
+- Review `docs/PLAN.md` before implementation work.

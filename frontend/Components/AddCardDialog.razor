@@ -1,0 +1,61 @@
+@using frontend.Services
+@using MudBlazor
+@inject BoardStore Store
+
+<MudDialog>
+    <DialogContent>
+        <MudText Typo="Typo.h6">Add card</MudText>
+        <MudText Typo="Typo.body2" Class="kanban-muted">@ColumnName</MudText>
+
+        <MudForm @ref="_form" Class="mt-4">
+            <MudTextField @bind-Value="_title"
+                          Label="Title"
+                          Required="true"
+                          RequiredError="Title is required"
+                          Immediate="true"
+                          AutoFocus="true"
+                          data-testid="addcard-title" />
+
+            <MudTextField @bind-Value="_details"
+                          Label="Details"
+                          Lines="4"
+                          Immediate="true"
+                          Class="mt-3"
+                          data-testid="addcard-details" />
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Variant="Variant.Text" OnClick="@(() => Cancel())" data-testid="addcard-cancel">Cancel</MudButton>
+        <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="@(() => Submit())" data-testid="addcard-submit">Add</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public string ColumnName { get; set; } = string.Empty;
+
+    private MudForm? _form;
+    private string _title = string.Empty;
+    private string _details = string.Empty;
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        var title = (_title ?? string.Empty).Trim();
+        var details = (_details ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(title))
+            return;
+
+        if (_form is not null)
+            await _form.ValidateAsync();
+
+        var columnId = Store.GetSnapshot().Columns.FirstOrDefault(c => c.Name == ColumnName)?.Id ?? Guid.Empty;
+        var id = Store.AddCard(columnId, title, details);
+        if (id == Guid.Empty)
+            return;
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}
+
