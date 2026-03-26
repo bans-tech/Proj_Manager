@@ -13,7 +13,7 @@
                           Margin="Margin.Dense"
                           Immediate="true"
                           AutoFocus="true"
-                          OnBlur="CommitRename"
+                          OnBlur="CommitRenameAsync"
                           OnKeyDown="OnRenameKeyDown"
                           Style="flex: 1;"
                           aria-label="Column name" />
@@ -22,7 +22,7 @@
                            Color="Color.Primary"
                            Size="Size.Small"
                            aria-label="Save column name"
-                           OnClick="CommitRename" />
+                           OnClick="CommitRenameAsync" />
         }
         else
         {
@@ -66,13 +66,13 @@
         _isRenaming = true;
     }
 
-    private void CommitRename()
+    private async Task CommitRenameAsync()
     {
         if (!_isRenaming)
             return;
 
         _isRenaming = false;
-        Store.RenameColumn(Column.Id, _nameDraft);
+        await Store.RenameColumnAsync(Column.Id, _nameDraft);
     }
 
     private void CancelRename()
@@ -81,10 +81,10 @@
         _nameDraft = Column.Name;
     }
 
-    private void OnRenameKeyDown(KeyboardEventArgs e)
+    private async Task OnRenameKeyDown(KeyboardEventArgs e)
     {
         if (e.Key is "Enter")
-            CommitRename();
+            await CommitRenameAsync();
         else if (e.Key is "Escape")
             CancelRename();
     }
@@ -107,7 +107,8 @@
         var result = await dialog.Result;
         if (result is null || result.Canceled)
             return;
+
+        if (result.Data is AddCardDialog.AddCardDialogResult payload)
+            await Store.AddCardAsync(Column.Id, payload.Title, payload.Details);
     }
-
 }
-

@@ -53,57 +53,57 @@ Success Criteria:
 ## Phase 4: MVP Authentication Flow
 
 Checklist:
-- [ ] Implement login endpoint with hardcoded credentials: `user` / `password`.
-- [ ] Implement session/cookie-based auth middleware.
-- [ ] Add logout endpoint.
-- [ ] Frontend login gate: unauthenticated users see login first.
+- [x] Implement login endpoint with hardcoded credentials: `user` / `password`.
+- [x] Implement session/cookie-based auth middleware.
+- [x] Add logout endpoint.
+- [x] Frontend login gate: unauthenticated users see login first.
 
 Tests:
-- [ ] Unit tests for auth service credential checks.
-- [ ] Integration tests for login success/failure and logout.
-- [ ] Frontend test verifies login gate behavior.
+- [x] Integration tests for login success/failure and logout.
+- [x] Integration test verifies `GET /api/auth/me` is unauthorized when logged out.
+- [x] Manual frontend verification confirms login gate behavior and logout flow.
 
 Success Criteria:
-- [ ] Unauthenticated users cannot access Kanban API routes.
-- [ ] Login enables Kanban UI; logout returns to login screen.
+- [x] Unauthenticated users cannot access Kanban API routes.
+- [x] Login enables Kanban UI; logout returns to login screen.
 
 ## Phase 5: Database Model and Persistence
 
 Checklist:
-- [ ] Add SQLite and EF Core setup.
-- [ ] Define normalized entities for `User`, `Board`, `Column`, and `Card`.
-- [ ] Ensure migrations auto-apply only in local/dev.
-- [ ] Document schema and persistence decisions in `docs/`.
+- [x] Add SQLite and EF Core setup.
+- [x] Define normalized entities for `User`, `Board`, `Column`, and `Card`.
+- [x] Ensure migrations auto-apply only in local/dev.
+- [x] Document schema and persistence decisions in `docs/`.
 
 Tests:
-- [ ] Unit tests for repository/service operations.
-- [ ] Integration tests using SQLite test DB for create/read/update flows.
+- [x] Unit tests for repository/service operations.
+- [x] Integration tests using SQLite test DB for create/read/update flows.
 
 Success Criteria:
-- [ ] DB file is created automatically if missing.
-- [ ] Kanban state persists across app restarts.
+- [x] DB file is created automatically if missing.
+- [x] Kanban state persists across app restarts.
 
 ## Phase 6: Kanban Backend API
 
 Checklist:
-- [ ] Add endpoints to fetch board state for signed-in user.
-- [ ] Add endpoints to update columns/cards and card movement.
-- [ ] Add validation and minimal error handling.
+- [x] Add endpoints to fetch board state for signed-in user.
+- [x] Add endpoints to update columns/cards and card movement.
+- [x] Add validation and minimal error handling.
 
 Tests:
-- [ ] Integration tests cover read/update/move operations.
-- [ ] Authorization tests confirm user isolation.
+- [x] Integration tests cover read/update/move operations.
+- [x] Authorization tests confirm user isolation.
 
 Success Criteria:
-- [ ] API fully supports Kanban CRUD/move operations required by UI.
-- [ ] Board updates are persisted reliably.
+- [x] API fully supports Kanban CRUD/move operations required by UI.
+- [x] Board updates are persisted reliably.
 
 ## Phase 7: Frontend to Backend Wiring
 
 Checklist:
-- [ ] Replace mock/local state persistence with backend API calls.
-- [ ] Keep drag/drop and edit UX functional with server-backed state.
-- [ ] Add loading/error handling for API interactions.
+- [x] Replace mock/local state persistence with backend API calls.
+- [x] Keep drag/drop and edit UX functional with server-backed state.
+- [x] Add loading/error handling for API interactions.
 
 Tests:
 - [ ] Blazor component/unit tests for API integration points.

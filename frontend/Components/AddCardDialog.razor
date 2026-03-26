@@ -1,6 +1,4 @@
-@using frontend.Services
 @using MudBlazor
-@inject BoardStore Store
 
 <MudDialog>
     <DialogContent>
@@ -51,11 +49,8 @@
         if (_form is not null)
             await _form.ValidateAsync();
 
-        var columnId = Store.GetSnapshot().Columns.FirstOrDefault(c => c.Name == ColumnName)?.Id ?? Guid.Empty;
-        var id = Store.AddCard(columnId, title, details);
-        if (id == Guid.Empty)
-            return;
-        MudDialog.Close(DialogResult.Ok(true));
+        MudDialog.Close(DialogResult.Ok(new AddCardDialogResult(title, details)));
     }
-}
 
+    public sealed record AddCardDialogResult(string Title, string Details);
+}

@@ -2,49 +2,111 @@
 @using frontend.Services
 @using frontend.Models
 @inject BoardStore Store
+@inject AuthState Auth
 @implements IDisposable
 
 <PageTitle>Board</PageTitle>
 
-<div class="board-wrap">
-    <MudDropContainer T="CardModel"
-                      Items="@Snapshot.Cards"
-                      ItemsSelector="@((card, zoneId) => card.ColumnId.ToString() == zoneId)"
-                      ItemDropped="OnCardDropped"
-                      Class="board-columns"
-                      @key="_renderKey">
-        <ChildContent>
-            @foreach (var column in Snapshot.Columns)
-            {
-                var count = Snapshot.Cards.Count(c => c.ColumnId == column.Id);
+@if (Auth.IsChecking)
+{
+    <MudPaper Class="login-panel" Elevation="1">
+        <MudText Typo="Typo.h6">Checking session...</MudText>
+    </MudPaper>
+}
+else if (!Auth.IsAuthenticated)
+{
+    <MudPaper Class="login-panel" Elevation="1">
+        <MudText Typo="Typo.h5" Class="login-title">Sign In</MudText>
+        <MudText Typo="Typo.body2" Class="login-hint">Use <b>user</b> / <b>password</b></MudText>
 
-                <KanbanColumn Column="column" CardCount="count">
-                    <MudDropZone T="CardModel"
-                                 Identifier="@column.Id.ToString()"
-                                 Class="kanban-dropzone"
-                                 data-testid="@($"dropzone-{column.Id}")" />
-                </KanbanColumn>
-            }
-        </ChildContent>
+        @if (!string.IsNullOrWhiteSpace(Auth.ErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Dense="true">@Auth.ErrorMessage</MudAlert>
+        }
 
-        <ItemRenderer>
-            <KanbanCard Card="@context"
-                        OnDelete="DeleteCard"
-                        IsActive="@(context.Id == _activeCardId)"
-                        OnActivate="SetActiveCard" />
-        </ItemRenderer>
-    </MudDropContainer>
-</div>
+        <MudStack Spacing="2">
+            <MudTextField Label="Username" @bind-Value="_username" Variant="Variant.Outlined" />
+            <MudTextField Label="Password" @bind-Value="_password" Variant="Variant.Outlined" InputType="InputType.Password" />
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Secondary"
+                       Disabled="_isLoggingIn"
+                       OnClick="LoginAsync">
+                @(_isLoggingIn ? "Signing in..." : "Sign in")
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+}
+else
+{
+    @if (!string.IsNullOrWhiteSpace(Store.ErrorMessage))
+    {
+        <MudAlert Severity="Severity.Error" Dense="true" Class="board-error">@Store.ErrorMessage</MudAlert>
+    }
+
+    @if (Store.IsBusy)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="board-loading" />
+    }
+
+    <div class="board-wrap">
+        <MudDropContainer T="CardModel"
+                          Items="@Snapshot.Cards"
+                          ItemsSelector="@((card, zoneId) => card.ColumnId.ToString() == zoneId)"
+                          ItemDropped="OnCardDropped"
+                          Class="board-columns"
+                          @key="_renderKey">
+            <ChildContent>
+                @foreach (var column in Snapshot.Columns)
+                {
+                    var count = Snapshot.Cards.Count(c => c.ColumnId == column.Id);
+
+                    <KanbanColumn Column="column" CardCount="count">
+                        <MudDropZone T="CardModel"
+                                     Identifier="@column.Id.ToString()"
+                                     Class="kanban-dropzone"
+                                     data-testid="@($"dropzone-{column.Id}")" />
+                    </KanbanColumn>
+                }
+            </ChildContent>
+
+            <ItemRenderer>
+                <KanbanCard Card="@context"
+                            OnDelete="DeleteCardAsync"
+                            IsActive="@(context.Id == _activeCardId)"
+                            OnActivate="SetActiveCard" />
+            </ItemRenderer>
+        </MudDropContainer>
+    </div>
+}
 
 @code {
     private BoardSnapshot Snapshot { get; set; } = new(Array.Empty<ColumnModel>(), Array.Empty<CardModel>());
     private int _renderKey;
     private Guid _activeCardId;
 
-    protected override void OnInitialized()
+    private bool _isLoggingIn;
+    private string _username = "user";
+    private string _password = "password";
+
+    protected override async Task OnInitializedAsync()
     {
         Snapshot = Store.GetSnapshot();
         Store.Changed += OnStoreChanged;
+        Auth.Changed += OnAuthChanged;
+
+        await Auth.RefreshAsync();
+        if (Auth.IsAuthenticated)
+            await Store.LoadAsync();
+    }
+
+    private async void OnAuthChanged()
+    {
+        if (Auth.IsAuthenticated)
+            await Store.LoadAsync();
+        else
+            Store.Clear();
+
+        await InvokeAsync(StateHasChanged);
     }
 
     private void OnStoreChanged()
@@ -57,16 +119,36 @@
     public void Dispose()
     {
         Store.Changed -= OnStoreChanged;
+        Auth.Changed -= OnAuthChanged;
     }
 
-    private void DeleteCard(Guid cardId) => Store.DeleteCard(cardId);
+    private async Task LoginAsync()
+    {
+        _isLoggingIn = true;
+
+        try
+        {
+            var ok = await Auth.LoginAsync(_username, _password);
+            if (ok)
+            {
+                _password = string.Empty;
+                await Store.LoadAsync();
+            }
+        }
+        finally
+        {
+            _isLoggingIn = false;
+        }
+    }
+
+    private Task DeleteCardAsync(Guid cardId) => Store.DeleteCardAsync(cardId);
 
     private void SetActiveCard(Guid cardId)
     {
         _activeCardId = _activeCardId == cardId ? Guid.Empty : cardId;
     }
 
-    private void OnCardDropped(MudItemDropInfo<CardModel> dropInfo)
+    private async Task OnCardDropped(MudItemDropInfo<CardModel> dropInfo)
     {
         if (dropInfo.Item is null)
             return;
@@ -74,6 +156,6 @@
         if (!Guid.TryParse(dropInfo.DropzoneIdentifier, out var targetColumnId))
             return;
 
-        Store.MoveCard(dropInfo.Item.Id, targetColumnId, dropInfo.IndexInZone);
+        await Store.MoveCardAsync(dropInfo.Item.Id, targetColumnId, dropInfo.IndexInZone);
     }
 }

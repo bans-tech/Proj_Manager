@@ -213,8 +213,6 @@ D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\dotnet.r
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\icudt_CJK.tjcz0u77k5.dat
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\icudt_EFIGS.tptq2av103.dat
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\icudt_no_CJK.lfu7j35m59.dat
-D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\frontend.12d4fdzsr5.wasm
-D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\frontend.l4xqoyidlh.pdb
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\blazor.boot.json
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\blazor.webassembly.js.gz
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\Microsoft.AspNetCore.Authorization.is84zt9n9u.wasm.gz
@@ -420,8 +418,6 @@ D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\dotnet.r
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\icudt_CJK.tjcz0u77k5.dat.gz
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\icudt_EFIGS.tptq2av103.dat.gz
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\icudt_no_CJK.lfu7j35m59.dat.gz
-D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\frontend.12d4fdzsr5.wasm.gz
-D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\frontend.l4xqoyidlh.pdb.gz
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\blazor.boot.json.gz
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\frontend.staticwebassets.runtime.json
 D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\frontend.staticwebassets.endpoints.json
@@ -836,7 +832,6 @@ D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\blazor.boot.json
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\tzxjg6is5z-rlc4y2i51z.gz
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\0wz98yz2xy-9ci77co5cp.gz
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\o7k4cxtn0u-7h25wudq12.gz
-D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\58hbteaqon-ptn4mx84fi.gz
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\dad134yrlb-i4jwne6fuo.gz
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\3cgw5cayss-t1cqhe9u97.gz
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\sh9wo0m86a-c2jlpeoesf.gz
@@ -1088,12 +1083,17 @@ D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\z76n6h74sk-itwjp
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\ieimtkc9aa-tjcz0u77k5.gz
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\b7rnpg4o35-tptq2av103.gz
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\lha9phm1my-lfu7j35m59.gz
-D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\qfulij7c2m-12d4fdzsr5.gz
-D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\e1rpvsmwzk-l4xqoyidlh.gz
-D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\4odag4e21d-4renj4zcl0.gz
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\staticwebassets.build.json
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\staticwebassets.build.json.cache
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\staticwebassets.development.json
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\staticwebassets.build.endpoints.json
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\frontend.csproj.Up2Date
 D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\ref\frontend.dll
+D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\58hbteaqon-tps8sac834.gz
+D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\frontend.zgerz8m70z.wasm
+D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\frontend.tcrskdvwku.pdb
+D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\frontend.zgerz8m70z.wasm.gz
+D:\Projects\vibe_coding\pm\frontend\bin\Debug\net9.0\wwwroot\_framework\frontend.tcrskdvwku.pdb.gz
+D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\qfulij7c2m-zgerz8m70z.gz
+D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\e1rpvsmwzk-tcrskdvwku.gz
+D:\Projects\vibe_coding\pm\frontend\obj\Debug\net9.0\compressed\4odag4e21d-10x7ufxu4d.gz
